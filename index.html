@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Matching Game</title>
+    <style>
+        img {
+            position: absolute;
+        }
+
+        div {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+        }
+
+        #rightSide {
+            left: 500px;
+            /* Moves the rightSide div 500px to the right -> this makes it to the right of leftSide div */
+            border-left: 1px solid;
+        }
+
+        p {
+            font-weight: bold;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Matching Game</h1>
+    <p>Click on the extra smiling face on the left side of the vertical line</p>
+
+    <div id="leftSide"></div> <!-- Shows Smiley faces on the left -->
+    <div id="rightSide"></div> <!-- Shows Smiley faces on the right -->
+
+    <!-- <img src="images/smile.png" />   -->
+    <!-- This img element is now in the DOM as a static element (will not change) -->
+
+    <script>
+        let numberOfFaces = 5;
+        const theLeftSide = document.getElementById("leftSide");
+        window.addEventListener("DOMContentLoaded", generateFaces);
+
+        const theRightSide = document.getElementById("rightSide");
+
+        function generateFaces() {
+            for (let i = 0; i < numberOfFaces; i++) {
+                let face = document.createElement("img");
+                face.src = "images/smile.png";               // img src="images/smile.png" -> Make img node dynamic
+
+                let randomTop = Math.floor(Math.random() * 400) + 1;
+                let randomLeft = Math.floor(Math.random() * 400) + 1;
+
+                face.style.top = randomTop + "px";
+                face.style.left = randomLeft + "px";
+
+                theLeftSide.appendChild(face);              // Adds face (<img> element) into the theLeftSide                               
+
+            }
+            theLeftSide.lastElementChild.addEventListener("click", nextLevel);
+            
+            const leftSideImages = theLeftSide.cloneNode(true);          // Clones all of the nodes under leftSide parent
+
+            leftSideImages.removeChild(leftSideImages.lastElementChild);  // Removes one of the child nodes under leftSide parent (i.e., a smiley face)
+
+            theRightSide.appendChild(leftSideImages);                    // Adds the copy of leftSide (with one of its child nodes removed) to be used under the rightSide parent
+            
+            document.body.addEventListener("click", gameOver);        
+        }
+        
+
+        // Displays Game Over message if user clicks on anything other than the correct smiley face on the left side
+        function gameOver() {
+            alert("Game Over!");
+            document.body.removeEventListener("click", gameOver);
+            theLeftSide.lastElementChild.removeEventListener("click", nextLevel);
+        }
+
+        function nextLevel(event) {
+            event.stopPropagation();
+            theLeftSide.replaceChildren();
+            theRightSide.replaceChildren();
+            numberOfFaces += 5;
+            generateFaces();
+        }
+
+
+
+        
+
+
+    </script>
+
+</body>
+
+
+</html>
