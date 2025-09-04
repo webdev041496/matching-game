@@ -1,2 +1,2 @@
 # matching-game
-Face Matching Game
+Face Find the Difference Game
